@@ -1,11 +1,18 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from socketserver import TCPServer
 from threading import Thread
 import time
 
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
+        print(f"GET request: {self.path}")
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write(bytes('{"status": "OK"}', "utf-8"))
+
+    def do_POST(self):
+        print(f"POST request: {self.path}")
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
@@ -28,6 +35,7 @@ def shark():
         time.sleep(5)
 
 def main():
+    print("Listening at port 8000")
     thread = Thread(target=shark)
     thread.start()
     server()
